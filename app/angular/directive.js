@@ -12,6 +12,7 @@
         return {
             'restrict': 'E',
             'scope': {
+                'id': '@',
                 'actionMessage': '@',
                 'captureMessage': '@',
                 'countdown': '@',
@@ -35,9 +36,9 @@
                 '</div>',
                 '<div class="ng-camera-stack">',
                 '<img class="ng-camera-overlay" ng-if="overlayUrl" ng-show="cameraLive" ng-src="{{overlayUrl}}" alt="overlay">',
-                '<div id="ng-camera-feed"></div>',
+                '<div id="ng-camera-feed-{{::id}}"></div>',
                 '</div>',
-                '<button id="ng-camera-action" ng-click="getSnapshot()">{{actionMessage}}</button>',
+                '<button id="ng-camera-action" ng-click="getSnapshot($event)">{{actionMessage}}</button>',
                 '</div>'].join(''),
             'link': link
         };
@@ -92,7 +93,7 @@
             if(scope.flashFallbackUrl !== 'undefined') {
                 Webcam.setSWFLocation(scope.flashFallbackUrl);
             }
-            Webcam.attach('#ng-camera-feed');
+            Webcam.attach('#ng-camera-feed-' + scope.id);
 
             /**
              * Register WebcamJS events
@@ -154,7 +155,8 @@
             /**
              * Get snapshot
              */
-            scope.getSnapshot = function() {
+            scope.getSnapshot = function($event) {
+                $event.preventDefault();
                 if(scope.countdown !== undefined) {
                     scope.countdownStart();
                     scope.countdownPromise.promise.then(function() {
