@@ -93,7 +93,9 @@
             if(scope.flashFallbackUrl !== 'undefined') {
                 Webcam.setSWFLocation(scope.flashFallbackUrl);
             }
-            Webcam.attach('#ng-camera-feed-' + scope.id);
+            $timeout(function() {
+                Webcam.attach('#ng-camera-feed-' + scope.id);
+            }, 1000);
 
             /**
              * Register WebcamJS events
